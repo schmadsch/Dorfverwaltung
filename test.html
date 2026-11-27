@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Supabase Verbindungstest</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #f3f5f4;
+        }
+
+        section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        li {
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Supabase Verbindungstest</h1>
+
+    <section>
+        <h2>Verbindungsstatus</h2>
+        <p id="status">Verbindung wird geprüft ...</p>
+    </section>
+
+    <section>
+        <h2>Ortschaften</h2>
+        <ul id="locations"></ul>
+    </section>
+
+    <section>
+        <h2>Veranstaltungskategorien</h2>
+        <ul id="categories"></ul>
+    </section>
+
+    <a href="index.html">Zurück zur Startseite</a>
+
+    <script>
+        window.addEventListener("error", function () {
+            const status = document.getElementById("status");
+            status.textContent =
+                "Fehler beim Laden der Anwendung.";
+            status.className = "error";
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+
+    <script>
+        async function runTest() {
+
+            const status = document.getElementById("status");
+
+            try {
+
+                const result = await testConnection();
+
+                status.textContent =
+                    "Verbindung erfolgreich!";
+                status.className = "success";
+
+                result.locations.forEach(location => {
+
+                    const li = document.createElement("li");
+                    li.textContent = location.name;
+
+                    document
+                        .getElementById("locations")
+                        .appendChild(li);
+                });
+
+                result.categories.forEach(category => {
+
+                    const li = document.createElement("li");
+                    li.textContent = category.name;
+                    li.style.color = category.color;
+
+                    document
+                        .getElementById("categories")
+                        .appendChild(li);
+                });
+
+            } catch (error) {
+
+                status.textContent =
+                    "Verbindungsfehler: " + error.message;
+
+                status.className = "error";
+
+                console.error(error);
+            }
+        }
+
+        runTest();
+    </script>
+
+</body>
+</html>

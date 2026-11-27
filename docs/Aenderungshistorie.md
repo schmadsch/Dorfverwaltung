@@ -9,3 +9,5 @@ Künftige Änderungen mit Datum, betroffenen Dateien, Entscheidungen und offenen
 - Browser-Verbindungstest erfolgreich: vier Ortsoptionen und zehn farbcodierte Kategorien laut Screenshot geladen.
 
 - Anforderungen präzisiert: externe Kalenderquellen und Benutzerkonten ausschließlich durch Admins verwalten; aktive Mitglieder dürfen auch fremde lokal verwaltete Termine bearbeiten und löschen. Mehrere Google-/ICS-Kalender vorgesehen. Nur Dokumentation aktualisiert; Umsetzung offen.
+
+- Nutzer bestätigt: importierte Termine auch für Admins schreibgeschützt; Änderungen ausschließlich im Ursprungskalender.

@@ -21,4 +21,5 @@
 - [ ] Geschützte Admin-Funktion für Anlegen und Löschen von Auth-Konten implementieren.
 - [ ] Mehrere externe Kalender über Google-iCal-/ICS-URLs einbinden; Verwaltung ausschließlich durch Admins.
 - [ ] Serverseitige Synchronisierung, sichere URL-Speicherung, Dubletten- und Serienbehandlung; Zugriffsschutz und Schutz vor unsicheren Abrufzielen.
-- [ ] Schreibschutz importierter Termine mit Nutzer bestätigen und serverseitig durchsetzen.
+- [x] Schreibschutz importierter Termine mit Nutzer bestätigt.
+- [ ] Schreibschutz importierter Termine serverseitig durchsetzen.

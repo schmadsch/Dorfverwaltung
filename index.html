@@ -235,7 +235,7 @@
                 grid-template-columns: 1fr;
             }
         }
-    </style>
+    .calendar-toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:16px}.calendar-toolbar label{display:grid;gap:4px;font-size:14px}.calendar-toolbar select,button{font:inherit;padding:8px 12px;border:1px solid var(--border);border-radius:7px;background:white;color:var(--text);cursor:pointer}button[aria-pressed=true]{background:var(--primary);color:white}.event-card{background:white;border:1px solid var(--border);border-left:5px solid var(--primary);border-radius:8px;padding:14px 18px;margin:10px 0}.event-card h3,.event-card p{margin:4px 0}.event-card small{color:var(--muted)}.event-card details p{white-space:pre-wrap;overflow-wrap:anywhere}.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}.month-day{background:white;min-height:80px;padding:5px;border:1px solid var(--border);border-radius:4px;overflow:hidden}.month-event{display:block;width:100%;text-align:left;font-size:12px;padding:3px;overflow-wrap:anywhere;margin-top:3px}.month-grid>strong{text-align:center}#month-controls{margin-bottom:12px}#month-label{margin:0 12px}@media(max-width:600px){.month-day{min-height:60px;padding:2px}.month-event{font-size:10px;padding:2px}.calendar-toolbar label{flex:1;min-width:130px}}</style>
 </head>
 
 <body>
@@ -268,7 +268,7 @@
             </p>
         </div>
 
-        <!-- Öffentlicher Bereich -->
+        <section aria-labelledby="calendar-heading"><h2 id="calendar-heading">Veranstaltungen und Termine</h2><div class="calendar-toolbar"><label>Ortschaft<select id="event-location"><option value="">Alle Ortschaften</option></select></label><label>Kategorie<select id="event-category"><option value="">Alle Kategorien</option></select></label><button id="view-list" aria-pressed="true">Terminliste</button><button id="view-month" aria-pressed="false">Monatskalender</button></div><div id="month-controls" hidden><button id="month-prev" aria-label="Vorheriger Monat">‹</button><strong id="month-label"></strong><button id="month-next" aria-label="Nächster Monat">›</button></div><p id="event-status" role="status">Termine werden geladen …</p><div id="event-results"></div></section><!-- Öffentlicher Bereich -->
 
         <section>
 
@@ -278,17 +278,7 @@
 
             <div class="grid">
 
-                <div class="tile disabled">
-                    <div class="tile-icon">📅</div>
-                    <h3>Veranstaltungen</h3>
-                    <p>
-                        Termine und Veranstaltungen
-                        unserer Ortschaften.
-                    </p>
-                    <span class="status">
-                        In Vorbereitung
-                    </span>
-                </div>
+                
 
                 <div class="tile disabled">
                     <div class="tile-icon">📲</div>
@@ -387,7 +377,7 @@
         </p>
     </footer>
 
-</body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js"></script><script src="calendar.js"></script></body>
 
 </html>
 

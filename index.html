@@ -250,7 +250,7 @@
                 </p>
             </div>
 
-            <a class="login-button" href="resources.html">Anmelden</a>
+            <a id="session-button" class="login-button" href="resources.html">Anmelden</a>
 
         </div>
     </header>
@@ -372,7 +372,9 @@
         </p>
     </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js"></script><script src="calendar.js"></script></body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="app.js"></script><script src="calendar.js"></script><script>
+(()=>{const b=document.getElementById("session-button");let signedIn=false;function render(session){signedIn=!!session;b.textContent=signedIn?"Abmelden":"Anmelden";b.href=signedIn?"#":"resources.html";}db.auth.onAuthStateChange((_event,session)=>render(session));db.auth.getSession().then(({data,error})=>{if(!error)render(data.session)});window.addEventListener("pageshow",()=>db.auth.getSession().then(({data,error})=>{if(!error)render(data.session)}));b.addEventListener("click",async e=>{if(!signedIn)return;e.preventDefault();const {error}=await db.auth.signOut();if(error){alert("Abmeldung fehlgeschlagen: "+error.message);return;}render(null);});})();
+</script></body>
 
 </html>
 

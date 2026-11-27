@@ -27,4 +27,6 @@ Die Skripte wurden aus den bereitgestellten Supabase-Skripten rekonstruiert und 
 01–04 sind für den initialen Aufbau eines neuen Supabase-Projekts vorgesehen, nicht blind in der bestehenden Datenbank erneut ausführen. Für 05 die Platzhalter-UUID durch eine lokale Test-Benutzer-ID ersetzen. Der Test endet mit ROLLBACK. Auth-Einstellungen, tatsächliche Benutzer, Administratorfreischaltung und produktive Daten müssen separat gesichert bzw. eingerichtet werden.
 
 ## Weiterarbeiten
-Zuerst den Entwicklungsstand und offene Aufgaben lesen, dann Verbindungstest bestätigen. Bei Änderungen Dokumentation und SQL-Migrationen mitpflegen. Keine Passwörter, geheimen Schlüssel oder personenbezogenen Daten in diesem öffentlichen Repository speichern.
+Zuerst den Entwicklungsstand und offene Aufgaben lesen, dann öffentliche Terminübersicht und weitere RLS/API-Tests umsetzen. Bei Änderungen Dokumentation und SQL-Migrationen mitpflegen. Keine Passwörter, geheimen Schlüssel oder personenbezogenen Daten in diesem öffentlichen Repository speichern.
+
+Browser-Verbindungstest am 27.11.2026 erfolgreich bestätigt.

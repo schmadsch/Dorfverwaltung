@@ -11,14 +11,15 @@ Deno.serve(async req=>{
  if(req.method!=="POST")return new Response("Method not allowed",{status:405});
  const [secret]=await sql`select token::text from calendar_internal.sync_token limit 1`;
  if(!secret || req.headers.get("x-calendar-token")!==secret.token)return new Response("Unauthorized",{status:401});
- const sources=await sql`select * from public.calendar_sources where active and (last_sync_at is null or last_sync_at <= now()-make_interval(mins=>sync_interval))`;
+ const sources=await sql`select * from public.calendar_sources where active and (next_attempt_at is null or next_attempt_at <= now()) and (last_sync_at is null or last_sync_at <= now()-make_interval(mins=>sync_interval))`;
  const results=[];
  for(const s of sources){
+ let retryAfter=0;
  try{
  const u=new URL(s.feed_url);
  if(u.origin!=="https://calendar.google.com" || !u.pathname.startsWith("/calendar/ical/") || !u.pathname.endsWith(".ics") || u.username || u.password)throw Error("unsupported_source");
  const r=await fetch(u,{redirect:"error",signal:AbortSignal.timeout(15000)});
- if(!r.ok)throw Error("http_"+r.status);
+ if(!r.ok){const h=r.headers.get("Retry-After");if(h)retryAfter=/^\d+$/.test(h)?Number(h)*1000:Math.max(0,Date.parse(h)-Date.now())||0;throw Error("http_"+r.status);}
  const raw=await r.text(); if(raw.length>5000000 || !raw.trim().endsWith("END:VCALENDAR"))throw Error("invalid_feed");
  const cal=new ICAL.Component(ICAL.parse(raw));
  if(cal.name!=="vcalendar")throw Error("invalid_calendar");
@@ -58,10 +59,10 @@ Deno.serve(async req=>{
  const stamp=new Date().toISOString();
  for(const e of rows)await tx`insert into public.events(title,description,venue,start_at,end_at,all_day,location_id,category_id,is_public,calendar_source_id,external_uid,external_recurrence_id,last_synced_at) values(${e.title},${e.description},${e.venue},case when ${e.start} ~ '(Z|[+-][0-9]{2}:[0-9]{2})$' then ${e.start}::timestamptz else ${e.start}::timestamp at time zone 'Europe/Berlin' end, greatest(case when ${e.end} ~ '(Z|[+-][0-9]{2}:[0-9]{2})$' then ${e.end}::timestamptz else ${e.end}::timestamp at time zone 'Europe/Berlin' end, (case when ${e.start} ~ '(Z|[+-][0-9]{2}:[0-9]{2})$' then ${e.start}::timestamptz else ${e.start}::timestamp at time zone 'Europe/Berlin' end)+interval '1 second'),${e.all_day},${current.location_id},${current.category_id},${current.is_public},${s.id},${e.uid},${e.key},${stamp}) on conflict(calendar_source_id,external_uid,external_recurrence_id) do update set title=excluded.title,description=excluded.description,venue=excluded.venue,start_at=excluded.start_at,end_at=excluded.end_at,all_day=excluded.all_day,location_id=excluded.location_id,category_id=excluded.category_id,is_public=excluded.is_public,last_synced_at=excluded.last_synced_at`;
  await tx`delete from public.events where calendar_source_id=${s.id} and last_synced_at is distinct from ${stamp}::timestamptz`;
- await tx`update public.calendar_sources set last_sync_at=${stamp},sync_status='ok' where id=${s.id}`;
+ await tx`update public.calendar_sources set last_sync_at=${stamp},sync_status='ok',next_attempt_at=null,consecutive_failures=0 where id=${s.id}`;
  });
  results.push({id:s.id,count:rows.length,status:"ok"});
- }catch(e){console.error("calendar sync failed",s.id,e instanceof Error?e.message.replace(/https?:\/\/\S+/g,"[URL]"):"error");await sql`update public.calendar_sources set sync_status='error' where id=${s.id}`;results.push({id:s.id,status:"error"});}
+ }catch(e){console.error("calendar sync failed",s.id,e instanceof Error?e.message.replace(/https?:\/\/\S+/g,"[URL]"):"error");const limited=e instanceof Error && e.message==="http_429";const delay=Math.max(retryAfter,limited?Math.min(86400000,3600000*2**Math.min(s.consecutive_failures,5)):1800000);await sql`update public.calendar_sources set sync_status=${limited?"http_429":"error"},next_attempt_at=${new Date(Date.now()+delay).toISOString()},consecutive_failures=consecutive_failures+1 where id=${s.id}`;results.push({id:s.id,status:"error"});}
  }
  return Response.json({results});
 });

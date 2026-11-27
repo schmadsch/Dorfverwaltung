@@ -1,0 +1,1 @@
+alter table public.calendar_sources add column if not exists next_attempt_at timestamptz, add column if not exists consecutive_failures integer not null default 0;

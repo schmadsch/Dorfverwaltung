@@ -15,3 +15,10 @@
 - [ ] Inventar, Lagerorte, Ansprechpartner.
 - [ ] Ressourcenbuchung und Verfügbarkeit.
 - [ ] Separates vertrauliches Backup der tatsächlichen Datenbank und Auth-Konfiguration planen.
+
+## Ergänzte Anforderungen
+- [ ] Öffentliche Selbstregistrierung in Supabase deaktivieren.
+- [ ] Geschützte Admin-Funktion für Anlegen und Löschen von Auth-Konten implementieren.
+- [ ] Mehrere externe Kalender über Google-iCal-/ICS-URLs einbinden; Verwaltung ausschließlich durch Admins.
+- [ ] Serverseitige Synchronisierung, sichere URL-Speicherung, Dubletten- und Serienbehandlung; Zugriffsschutz und Schutz vor unsicheren Abrufzielen.
+- [ ] Schreibschutz importierter Termine mit Nutzer bestätigen und serverseitig durchsetzen.

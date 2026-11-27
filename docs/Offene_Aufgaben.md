@@ -1,6 +1,6 @@
 # Offene Aufgaben
 ## Unmittelbar
-- [ ] Browser-Verbindungstest bestätigen (Ortschaften und Kategorien).
+- [x] Browser-Verbindungstest bestätigt (4 Ortsoptionen, 10 Kategorien).
 - [ ] RLS/API mit anonymen, inaktiven, aktiven und Admin-Benutzern testen.
 - [ ] Auth-Konfiguration und Anmeldung prüfen.
 ## Terminverwaltung (vorgeschlagene Reihenfolge)

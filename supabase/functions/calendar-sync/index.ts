@@ -61,7 +61,7 @@ Deno.serve(async req=>{
  await tx`update public.calendar_sources set last_sync_at=${stamp},sync_status='ok' where id=${s.id}`;
  });
  results.push({id:s.id,count:rows.length,status:"ok"});
- }catch(e){console.error("calendar sync failed",s.id,e instanceof Error?e.name:"error");await sql`update public.calendar_sources set sync_status='error' where id=${s.id}`;results.push({id:s.id,status:"error"});}
+ }catch(e){console.error("calendar sync failed",s.id,e instanceof Error?e.message.replace(/https?:\/\/\S+/g,"[URL]"):"error");await sql`update public.calendar_sources set sync_status='error' where id=${s.id}`;results.push({id:s.id,status:"error"});}
  }
  return Response.json({results});
 });

@@ -28,8 +28,10 @@ Deno.serve(async req=>{
  const e=new ICAL.Event(c); if(!e.uid)throw Error("missing_uid");
  const g=groups.get(e.uid)||[];g.push(e);groups.set(e.uid,g);
  }
- const from=new Date();from.setUTCDate(from.getUTCDate()-365);
- const until=new Date();until.setUTCDate(until.getUTCDate()+730);
+ const from=new Date();
+ const until=new Date();until.setUTCFullYear(until.getUTCFullYear()+1);
+ const localDate=(d)=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Europe/Berlin',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+ const first=localDate(from),last=localDate(until);
  const rows=[];
  for(const [uid,g] of groups){
  const master=g.find(e=>!e.isRecurrenceException());
@@ -38,7 +40,7 @@ Deno.serve(async req=>{
  if(e.component.getFirstPropertyValue("status")==="CANCELLED")return;
  if(!start||!end)throw Error("missing_dates");
  const a=iso(start),b=iso(end);
- if(a.slice(0,10)>until.toISOString().slice(0,10)||b.slice(0,10)<from.toISOString().slice(0,10))return;
+ if((a.endsWith("Z")?localDate(new Date(a)):a.slice(0,10))>last||(b.endsWith("Z")?localDate(new Date(b)):b.slice(0,10))<first)return;
  rows.push({uid,key,title:e.summary||"(Ohne Titel)",description:e.description||null,venue:e.location||null,start:a,end:b,all_day:start.isDate});
  };
  if(master && master.component.getFirstPropertyValue("status")!=="CANCELLED"){
